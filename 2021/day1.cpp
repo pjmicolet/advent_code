@@ -2,6 +2,7 @@
 #include <numeric>
 #include <fstream>
 #include <string>
+#include <deque>
 #include "utils/input_parser.h"
 
 struct Levels {
@@ -10,21 +11,17 @@ struct Levels {
 		levels_.push_back(level);
 		return levels_.size() < numberOfLevels_;
 	}
-	Levels check( int& increaseCounter, int& previous )
+	void check( int& increaseCounter, int& previous )
 	{
 		int sum = std::accumulate(levels_.begin(), levels_.end(), 0);
 		if( previous != -1 && previous < sum )
 			increaseCounter++;
 		previous = sum;
-		Levels nextP{numberOfLevels_};
-
-		for( int i = 1; i < numberOfLevels_; i++ )
-			nextP.pushBack( levels_[i] );
-		return nextP;
+		levels_.pop_front();
 	}
 	private:
 		int numberOfLevels_;
-		std::vector<int> levels_;
+		std::deque<int> levels_;
 };
 
 int main( int argc, char** argv)
@@ -62,7 +59,7 @@ int main( int argc, char** argv)
 	{
 		auto number = std::stoi(line);
 		if(!threeWind.pushBack(number))
-			threeWind = threeWind.check(increaseCounter,previous);
+			threeWind.check(increaseCounter,previous);
 	}
 
 	std::cout << "Sliding " << increaseCounter << "\n";
