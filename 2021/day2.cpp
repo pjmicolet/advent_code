@@ -1,6 +1,6 @@
 #include <iostream>
-#include <fstream>
 #include <string>
+#include "utils/input_parser.h"
 
 struct pos {
 	pos() : depth(0), position(0) {}
@@ -9,32 +9,26 @@ struct pos {
 };
 
 int main(int argc, char** argv ) {
-	auto filename = argv[1];
-	std::ifstream infile{ filename };
+	std::string filename = argv[1];
+	InputParser parser{filename};
 
 	std::string line = "";
 	pos position{};
+	std::vector<std::string> splitLine;
 	
-	while(std::getline(infile,line))
+	while(parser.readLine(splitLine, ' '))
 	{
-		std::string direc = "";
-		int i = 0;
-
-		do direc += line[i];
-		while(line[++i] != ' ');
-		i++;
-
-		int amount = std::stoi(line.substr(i));
+		auto direc = splitLine[0];
+		int amount = std::stoi(splitLine[1]);
 		if( direc == "forward" )
 			position.position+=amount;
 		else if( direc == "down" )
 			position.depth+=amount;
 		else if( direc == "up" )
 			position.depth-=amount;
-
+		splitLine.clear();
 	}
 
 	std::cout << (position.position*position.depth) << "\n";
-
 }
 

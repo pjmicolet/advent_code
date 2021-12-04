@@ -1,21 +1,22 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "utils/input_parser.h"
 
 int main( int argc, char** argv)
 {
-	auto filename = argv[1];
-	std::ifstream infile{ filename };
+	std::string filename = argv[1];
+	InputParser parser{filename};
 
 	std::string line = "";
 	int level = 0;
 	int next_level = -1;
 
-	if(std::getline(infile, line))
+	if(parser.readLine(line))
 		level = stoi(line);
 
 	int increases = 0;
-	while(std::getline(infile,line))
+	while(parser.readLine(line))
 	{
 		next_level = std::stoi(line);
 		if( next_level > level )
